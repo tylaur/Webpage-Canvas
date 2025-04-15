@@ -1,0 +1,10 @@
+{
+     "name": "Webpage Canvas",
+     "description": "Use a webpage like your personal artboard.",
+     "version": "1.0",
+     "manifest_version": 3,
+     "action": {
+       "default_popup": "index.html",
+       "default_icon": "icon.png"
+     }
+   }
