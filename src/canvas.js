@@ -8,5 +8,5 @@ setStyleProperties(canvas, styles.canvas);
 const ctx = canvas.getContext("2d");
 
 export {
-     canvas, ctx
-}
+  canvas, ctx
+};

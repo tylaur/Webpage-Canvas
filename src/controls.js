@@ -19,22 +19,22 @@ controlsContainer.appendChild(blueColor);
 const clearCanvas = document.createElement("div");
 clearCanvas.innerText = "CLEAR";
 setStyleProperties(clearCanvas, {
-     ...styles.controlBox,
-     "background-color": "gray",
-     "text-align": "center",
-     "font-size": "10px",
-     "color": "white",
-     "line-height": "40px"
+  ...styles.controlBox,
+  "background-color": "gray",
+  "text-align": "center",
+  "font-size": "10px",
+  "color": "white",
+  "line-height": "40px"
 });
 controlsContainer.appendChild(clearCanvas);
 
 const controls = {
-     redColor,
-     greenColor,
-     blueColor,
-     clearCanvas
+  redColor,
+  greenColor,
+  blueColor,
+  clearCanvas
 };
 
 export {
-     controlsContainer, controls
-}
+  controlsContainer, controls
+};

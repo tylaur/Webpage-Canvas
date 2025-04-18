@@ -24,9 +24,9 @@ setStyleProperties(denyButton, styles.modal.denyButton);
 buttonContainer.appendChild(denyButton);
 
 export {
-     modal,
-     alertText,
-     buttonContainer,
-     confirmButton,
-     denyButton
-}
+  modal,
+  alertText,
+  buttonContainer,
+  confirmButton,
+  denyButton
+};

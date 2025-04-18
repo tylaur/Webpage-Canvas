@@ -2,24 +2,24 @@ import { canvas, ctx } from "./canvas.js";
 import { controlsContainer, controls } from "./controls.js";
 import { modal } from "./modal.js";
 import {
-     setOtherElementsClickable,
-     resetCanvas,
-     onMouseDown,
-     onMouseMove,
-     onPathDone
+  setOtherElementsClickable,
+  resetCanvas,
+  onMouseDown,
+  onMouseMove,
+  onPathDone
 } from "./canvasUtils.js";
 import {
-     onClear,
-     onColorSelect
+  onClear,
+  onColorSelect
 } from "./controlsUtils.js";
 
 const state = {
-     drawing: false,
-     color: "red",
-     paths: [],
-     currentPath: [],
-     canvas,
-     ctx
+  drawing: false,
+  color: "red",
+  paths: [],
+  currentPath: [],
+  canvas,
+  ctx
 };
 
 // Configuring the canvas
