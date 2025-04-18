@@ -1,48 +1,38 @@
+import styles from "./styles.js";
 import { setStyleProperties } from "./utils.js";
 
 const controlsContainer = document.createElement("div");
-setStyleProperties(controlsContainer, {
-     "id": "controls-webpage-canvas",
-     "position": "fixed",
-     "display": "flex",
-     "flex-direction": "column",
-     "gap": "10px",
-     "top": "20vh",
-     "width": "60px",
-     "left": "25px",
-     "height": "60vh",
-     "justify-content": "center",
-     "align-items": "center",
-     "background-color": "gray",
-     "border": "3px solid black",
-     "border-radius": "15px",
-     "z-index": 999
-});
-
-const defaultBoxStyles = {
-     "width": "40px",
-     "height": "40px",
-     "background-color": "red",
-     "border": "3px solid black",
-     "border-radius": "10px"
-};
+setStyleProperties(controlsContainer, styles.controlsContainer);
 
 const redColor = document.createElement("div");
-setStyleProperties(redColor, defaultBoxStyles);
+setStyleProperties(redColor, {...styles.controlBox, "background-color": "red"});
 controlsContainer.appendChild(redColor);
 
 const greenColor = document.createElement("div");
-setStyleProperties(greenColor, {...defaultBoxStyles, "background-color": "green"});
+setStyleProperties(greenColor, {...styles.controlBox, "background-color": "green"});
 controlsContainer.appendChild(greenColor);
 
 const blueColor = document.createElement("div");
-setStyleProperties(blueColor, {...defaultBoxStyles, "background-color": "blue"});
+setStyleProperties(blueColor, {...styles.controlBox, "background-color": "blue"});
 controlsContainer.appendChild(blueColor);
+
+const clearCanvas = document.createElement("div");
+clearCanvas.innerText = "CLEAR";
+setStyleProperties(clearCanvas, {
+     ...styles.controlBox,
+     "background-color": "gray",
+     "text-align": "center",
+     "font-size": "10px",
+     "color": "white",
+     "line-height": "40px"
+});
+controlsContainer.appendChild(clearCanvas);
 
 const controls = {
      redColor,
      greenColor,
-     blueColor
+     blueColor,
+     clearCanvas
 };
 
 export {

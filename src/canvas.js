@@ -1,8 +1,9 @@
+import styles from "./styles.js";
+import { setStyleProperties } from "./utils.js";
+
 const canvas = document.createElement("canvas");
 canvas.id = "webpage-canvas";
-canvas.style.position = "absolute";
-canvas.style.top = "0px";
-canvas.style.left = "0px";
+setStyleProperties(canvas, styles.canvas);
 
 const ctx = canvas.getContext("2d");
 

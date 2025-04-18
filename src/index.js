@@ -1,5 +1,6 @@
 import { canvas, ctx } from "./canvas.js";
 import { controlsContainer, controls } from "./controls.js";
+import { modal } from "./modal.js";
 import {
      setOtherElementsClickable,
      resetCanvas,
@@ -8,6 +9,7 @@ import {
      onPathDone
 } from "./canvasUtils.js";
 import {
+     onClear,
      onColorSelect
 } from "./controlsUtils.js";
 
@@ -35,6 +37,9 @@ window.addEventListener("mouseleave", () => onPathDone(state));
 // Configuring the dashboard
 
 document.body.appendChild(controlsContainer);
-controls.redColor.addEventListener("click", (mouse) => onColorSelect(mouse, state));
-controls.greenColor.addEventListener("click", (mouse) => onColorSelect(mouse, state));
-controls.blueColor.addEventListener("click", (mouse) => onColorSelect(mouse, state));
+[controls.redColor, controls.blueColor, controls.greenColor].forEach((el) => el.addEventListener("click", (mouse) => onColorSelect(mouse, state)));
+controls.clearCanvas.addEventListener("click", () => onClear(state));
+
+// Configuring the modal
+
+document.body.appendChild(modal);
