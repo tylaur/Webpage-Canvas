@@ -6,5 +6,19 @@
      "action": {
        "default_popup": "index.html",
        "default_icon": "icon.png"
-     }
+     },
+    "content_scripts": [
+      {
+        "js": ["index.js"],
+        "matches": [
+          "<all_urls>"
+        ]
+      }
+    ],
+    "web_accessible_resources": [
+      {
+        "resources": ["src/*"],
+        "matches": ["<all_urls>"]
+      }
+    ]
    }
