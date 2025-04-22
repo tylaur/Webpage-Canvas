@@ -28,11 +28,24 @@ setStyleProperties(clearCanvas, {
 });
 controlsContainer.appendChild(clearCanvas);
 
+const eraser = document.createElement("div");
+eraser.innerText = "ERASER";
+setStyleProperties(eraser, {
+  ...styles.controlBox,
+  "background-color": "gray",
+  "text-align": "center",
+  "font-size": "10px",
+  "color": "white",
+  "line-height": "40px"
+});
+controlsContainer.appendChild(eraser);
+
 const controls = {
   redColor,
   greenColor,
   blueColor,
-  clearCanvas
+  clearCanvas,
+  eraser
 };
 
 export {

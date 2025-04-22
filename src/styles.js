@@ -1,5 +1,6 @@
 const canvas = {
   "position": "absolute",
+  "display": "none",
   "top": "0px",
   "left": "0px"
 };
@@ -7,7 +8,7 @@ const canvas = {
 const controlsContainer = {
   "id": "controls-webpage-canvas",
   "position": "fixed",
-  "display": "flex",
+  "display": "none",
   "flex-direction": "column",
   "gap": "10px",
   "top": "20vh",
@@ -35,7 +36,7 @@ modal.container = {
   "width": "50vw",
   "height": "50vh",
   "background-color": "gray",
-  "position": "absolute",
+  "position": "fixed",
   "display": "none",
   "top": "25vh",
   "left": "25vw",

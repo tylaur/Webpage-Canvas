@@ -3,10 +3,14 @@
      "description": "Use a webpage like your personal artboard.",
      "version": "1.0",
      "manifest_version": 3,
+     "permissions": ["storage", "tabs", "scripting", "unlimitedStorage"],
      "action": {
        "default_popup": "index.html",
        "default_icon": "icon.png"
      },
+     "background": {
+      "service_worker": "background.js"
+    },
     "content_scripts": [
       {
         "js": ["index.js"],

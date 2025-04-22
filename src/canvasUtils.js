@@ -14,10 +14,10 @@ function drawPaths(state) {
    
   for (let path of state.paths) {
 
-    state.ctx.beginPath();
+    state.ctx.beginPath(); // Index 0 is the starting point. Created by onMouseDown.
     state.ctx.moveTo(path[0].x * state.canvas.width, path[0].y * state.canvas.height); // Multiply by the canvas width,height when returning the paths
    
-    for (let i = 1; i < path.length; i++) {
+    for (let i = 1; i < path.length; i++) { // The actual path, created by onMouseMove.
       state.ctx.strokeStyle = path[i].color;
       state.ctx.lineTo(path[i].x * state.canvas.width, path[i].y * state.canvas.height);
     }
@@ -25,7 +25,7 @@ function drawPaths(state) {
     state.ctx.stroke();
   }
 
-  state.ctx.strokeStyle = "red";
+  state.ctx.strokeStyle = state.color;
 }
 
 function resetCanvas(state) {
@@ -38,6 +38,7 @@ function resetCanvas(state) {
 }
 
 function onMouseDown(mouse, state) {
+  if (state.disabled) return;
   state.drawing = true;
   state.currentPath = [getPathInformation(mouse, state)]; // Reset on mouse down
   state.ctx.beginPath();
@@ -45,7 +46,7 @@ function onMouseDown(mouse, state) {
 }
 
 function onMouseMove(mouse, state) {
-  if (!state.drawing) return;
+  if (!state.drawing || state.disabled) return;
   setOtherElementsClickable(state, false);
   state.currentPath.push(getPathInformation(mouse, state));
   state.ctx.lineTo(mouse.clientX + window.scrollX, mouse.clientY + window.scrollY); // clientX,Y is where the mouse sits on the viewport. ScrollX,Y is how much the page is scrolled.
@@ -53,10 +54,16 @@ function onMouseMove(mouse, state) {
 }
 
 function onPathDone(state) {
+  if (state.disabled) return;
   state.paths.push(state.currentPath); // add the current path
   state.drawing = false;
   setOtherElementsClickable(state, true);
   state.ctx.closePath();
+  chrome.runtime.sendMessage({ action: "getTabURL" }, (res) => {
+    chrome.storage.local.get(res.url, (storage) => {
+      chrome.storage.local.set({ [res.url]: { ...storage[res.url], paths: JSON.stringify(state.paths) }});
+    });
+  });
 }
 
 export {
@@ -64,5 +71,6 @@ export {
   resetCanvas,
   onMouseDown,
   onMouseMove,
-  onPathDone
+  onPathDone,
+  drawPaths
 };
