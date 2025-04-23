@@ -1,7 +1,9 @@
 import { modalAlert } from "./modalUtils.js";
+import { updateStorage } from "./utils.js";
 
 function onColorSelect(mouse, state) {
   let selectedColor = mouse.target.style.backgroundColor;
+  state.activeTool = "paint";
   state.ctx.strokeStyle = selectedColor;
   state.color = selectedColor;
 }
@@ -12,19 +14,16 @@ function onClear(state) {
     state.paths = [];
     state.currentPath = [];
     state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
-    chrome.runtime.sendMessage({ action: "getTabURL" }, (res) => {
-      chrome.storage.local.get(res.url, (storage) => {
-        chrome.storage.local.set({ [res.url]: { ...storage[res.url], paths: JSON.stringify([]) }});
-      });
-    });
+    updateStorage("paths", JSON.stringify([]));
   });
 }
 
 function onEraserClick(state) {
-  state.eraserActive = true;
+  state.activeTool = "eraser";
 }
 
 export {
   onColorSelect,
-  onClear
+  onClear,
+  onEraserClick
 };

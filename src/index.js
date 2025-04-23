@@ -11,12 +11,15 @@ import {
 } from "./canvasUtils.js";
 import {
   onClear,
-  onColorSelect
+  onColorSelect,
+  onEraserClick
 } from "./controlsUtils.js";
+import { getStorage } from "./utils.js";
 
 const state = {
   drawing: false,
   disabled: true,
+  activeTool: "paint",
   color: "red",
   paths: [],
   currentPath: [],
@@ -26,11 +29,21 @@ const state = {
 
 // Configuring the canvas
 
+// function debounce(func) {
+//   let timeout;
+//   return function(...args) {
+//     clearTimeout(timeout);
+//     timeout = setTimeout(func, 1000, args);
+//   };
+// }
+
+// const debouncedResetCanvas = debounce(resetCanvas);
+
 document.body.appendChild(canvas);
 resetCanvas(state);
 setOtherElementsClickable(state, true);
 document.addEventListener("DOMContentLoaded", () => resetCanvas(state));
-window.addEventListener("resize", () => resetCanvas(state));
+//window.addEventListener("resize", () => debouncedResetCanvas(state));
 window.addEventListener("mousedown", (mouse) => onMouseDown(mouse, state));
 window.addEventListener("mousemove", (mouse) => onMouseMove(mouse, state));
 window.addEventListener("mouseup", () => onPathDone(state));
@@ -39,9 +52,9 @@ window.addEventListener("mouseleave", () => onPathDone(state));
 // Configuring the dashboard
 
 document.body.appendChild(controlsContainer);
-[controls.redColor, controls.blueColor, controls.greenColor].forEach((el) => el.addEventListener("click", (mouse) => onColorSelect(mouse, state)));
+[controls.redColor, controls.blueColor, controls.greenColor, controls.yellowColor, controls.purpleColor].forEach((el) => el.addEventListener("click", (mouse) => onColorSelect(mouse, state)));
 controls.clearCanvas.addEventListener("click", () => onClear(state));
-//controls.eraser.addEventListener("click", () => on)
+controls.eraser.addEventListener("click", () => onEraserClick(state));
 
 // Configuring the modal
 
@@ -70,16 +83,12 @@ chrome.runtime.onMessage.addListener((message) => {
   }
 });
 
-chrome.runtime.sendMessage({ action: "getTabURL" }, (res) => {
-  chrome.storage.local.get(res.url, (storage) => {
-    if (!storage || !storage[res.url]) return;
-    storage = storage[res.url];
-    if (storage.checked) {
-      enable();
-    }
-    if (storage.paths) {
-      state.paths = JSON.parse(storage.paths);
-      drawPaths(state);
-    }
-  });
-});
+(async () => {
+  let enabled = await getStorage("checked");
+  let paths = await getStorage("paths");
+  if (enabled) enable();
+  if (paths) {
+    state.paths = JSON.parse(paths);
+    drawPaths(state);
+  }
+})();

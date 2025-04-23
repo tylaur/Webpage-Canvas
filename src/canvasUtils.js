@@ -1,3 +1,5 @@
+import { updateStorage } from "./utils.js";
+
 function setOtherElementsClickable(state, clickable) {
   state.canvas.style.pointerEvents = (clickable ? "none" : "auto"); // The canvas sits on top of everything. by setting it's pointer events to none it makes other stuff clickable.
 }
@@ -29,6 +31,7 @@ function drawPaths(state) {
 }
 
 function resetCanvas(state) {
+  state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
   state.canvas.width = document.body.scrollWidth;
   state.canvas.height = document.body.scrollHeight;
   state.ctx.lineWidth = 5;
@@ -40,6 +43,8 @@ function resetCanvas(state) {
 function onMouseDown(mouse, state) {
   if (state.disabled) return;
   state.drawing = true;
+  document.body.style.cursor = "crosshair";
+  if (state.activeTool === "eraser") return;
   state.currentPath = [getPathInformation(mouse, state)]; // Reset on mouse down
   state.ctx.beginPath();
   state.ctx.moveTo(mouse.clientX + window.scrollX, mouse.clientY + window.scrollY);
@@ -48,6 +53,10 @@ function onMouseDown(mouse, state) {
 function onMouseMove(mouse, state) {
   if (!state.drawing || state.disabled) return;
   setOtherElementsClickable(state, false);
+  if (state.activeTool === "eraser") {
+    eraserOnMouseMove(mouse, state);
+    return;
+  }
   state.currentPath.push(getPathInformation(mouse, state));
   state.ctx.lineTo(mouse.clientX + window.scrollX, mouse.clientY + window.scrollY); // clientX,Y is where the mouse sits on the viewport. ScrollX,Y is how much the page is scrolled.
   state.ctx.stroke();
@@ -55,15 +64,35 @@ function onMouseMove(mouse, state) {
 
 function onPathDone(state) {
   if (state.disabled) return;
-  state.paths.push(state.currentPath); // add the current path
   state.drawing = false;
+  document.body.style.cursor = "auto";
+  if (state.activeTool === "eraser") {
+    updateStorage("paths", JSON.stringify(state.paths));
+    return;
+  }
+  state.paths.push(state.currentPath); // add the current path
   setOtherElementsClickable(state, true);
   state.ctx.closePath();
-  chrome.runtime.sendMessage({ action: "getTabURL" }, (res) => {
-    chrome.storage.local.get(res.url, (storage) => {
-      chrome.storage.local.set({ [res.url]: { ...storage[res.url], paths: JSON.stringify(state.paths) }});
-    });
-  });
+  updateStorage("paths", JSON.stringify(state.paths));
+}
+
+function eraserOnMouseMove(mouse, state) {
+  let x = (mouse.clientX + window.scrollX);
+  let y = (mouse.clientY + window.scrollY);
+
+  for (let i = 0; i < state.paths.length; i++) {
+    let path = state.paths[i];
+    for (let k = 0; k < path.length; k++) {
+      let xDiff = Math.abs(x - (path[k].x * state.canvas.width));
+      let yDiff = Math.abs(y - (path[k].y * state.canvas.height));
+      if (xDiff <= 10 && yDiff <= 10) {
+        state.paths.splice(i, 1);
+        resetCanvas(state);
+        return;
+      }
+    }
+  }
+
 }
 
 export {

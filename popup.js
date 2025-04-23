@@ -11,7 +11,9 @@ chrome.tabs.query({ active: true, lastFocusedWindow: true }, ([tab]) => {
     chrome.tabs.sendMessage(tab.id, {
       action: (toggle.checked ? "enable" : "disable")
     });
-    chrome.storage.local.set({ [tab.url]: { checked: toggle.checked }});
+    chrome.storage.local.get(tab.url, (storage) => {
+      chrome.storage.local.set({ [tab.url]: { ...storage[tab.url], checked: toggle.checked }});
+    });
   });
 
 });
